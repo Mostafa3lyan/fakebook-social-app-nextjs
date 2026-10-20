@@ -10,7 +10,7 @@ export default function HomePage() {
         {/* Logo / Brand header */}
         <div className="space-y-2">
           <div className="inline-flex items-center gap-2 rounded-full border bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary">
-            <Sparkles className="size-3.5" />
+            <Sparkles className="size-3.5" aria-hidden="true" />
             <span>Fakebook Social Network</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground font-heading">
@@ -24,21 +24,23 @@ export default function HomePage() {
         {/* Action card */}
         <Card className="border shadow-lg text-left">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold">Welcome to Fakebook</CardTitle>
+            <CardTitle>
+              <h2 className="text-lg font-semibold text-foreground">Welcome to Fakebook</h2>
+            </CardTitle>
             <CardDescription>
               Sign in with your verified credentials or create a new account to join the conversation.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col sm:flex-row gap-3">
-            <Button asChild size="lg" className="flex-1 font-medium">
-              <Link href="/login">
-                <LogIn className="size-4 mr-2" />
+            <Button asChild size="lg" className="flex-1 font-medium min-h-11 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
+              <Link href="/login" className="flex items-center justify-center">
+                <LogIn className="size-4 mr-2" aria-hidden="true" />
                 Sign In
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="flex-1 font-medium">
-              <Link href="/signup">
-                <UserPlus className="size-4 mr-2" />
+            <Button asChild variant="outline" size="lg" className="flex-1 font-medium min-h-11 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none">
+              <Link href="/signup" className="flex items-center justify-center">
+                <UserPlus className="size-4 mr-2" aria-hidden="true" />
                 Create Account
               </Link>
             </Button>
