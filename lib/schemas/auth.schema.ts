@@ -143,6 +143,21 @@ export const LoginConfirmSchema = z.object({
   otp: otpField,
 })
 
+export const ChangePasswordSchema = z
+  .object({
+    oldPassword: z.string().min(1, "Current password is required"),
+    newPassword: passwordField,
+    confirmNewPassword: z.string().min(1, "Please confirm your new password"),
+  })
+  .refine((data) => data.newPassword !== data.oldPassword, {
+    message: "New password must be different from current password",
+    path: ["newPassword"],
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "New passwords do not match",
+    path: ["confirmNewPassword"],
+  })
+
 // 4. Inferred Type Exports
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>
@@ -152,3 +167,5 @@ export type ForgotPasswordSchemaType = z.infer<typeof ForgotPasswordSchema>
 export type VerifyOtpSchemaType = z.infer<typeof VerifyOtpSchema>
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>
 export type LoginConfirmSchemaType = z.infer<typeof LoginConfirmSchema>
+export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>
+
