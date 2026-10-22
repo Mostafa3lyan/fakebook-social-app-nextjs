@@ -158,6 +158,26 @@ export const ChangePasswordSchema = z
     path: ["confirmNewPassword"],
   })
 
+export const UpdateProfileSchema = z.object({
+  firstName: nameField("First name"),
+  lastName: nameField("Last name"),
+  phone: z
+    .string()
+    .trim()
+    .regex(EGYPTIAN_PHONE_REGEX, "Please enter a valid Egyptian mobile number (e.g. 01012345678)")
+    .optional()
+    .or(z.literal("")),
+  dateOfBirth: birthDateField,
+  gender: z.enum([GenderEnum.Male, GenderEnum.Female], {
+    message: "Please select a gender",
+  }),
+})
+
+export const RestoreAccountSchema = z.object({
+  email: emailField,
+  password: passwordField,
+})
+
 // 4. Inferred Type Exports
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>
@@ -168,4 +188,7 @@ export type VerifyOtpSchemaType = z.infer<typeof VerifyOtpSchema>
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>
 export type LoginConfirmSchemaType = z.infer<typeof LoginConfirmSchema>
 export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>
+export type UpdateProfileSchemaType = z.infer<typeof UpdateProfileSchema>
+export type RestoreAccountSchemaType = z.infer<typeof RestoreAccountSchema>
+
 

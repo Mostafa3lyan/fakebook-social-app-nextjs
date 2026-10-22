@@ -84,6 +84,12 @@ export const authService = {
       body: JSON.stringify({ otp }),
     }),
 
+  disable2fa: (otp: string) =>
+    api<void>("/auth/disable-2fa", {
+      method: "PATCH",
+      body: JSON.stringify({ otp }),
+    }),
+
   logout: (flag: "current" | "all" = "current") =>
     api<void>("/user/logout", {
       method: "POST",

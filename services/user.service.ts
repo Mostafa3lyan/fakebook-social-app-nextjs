@@ -1,10 +1,26 @@
 import { api } from "@/lib/api/client"
-import { IPublicUser, IUser } from "@/lib/types"
+import {
+  AuthCredentials,
+  BlockedUser,
+  ChangePasswordDto,
+  IPagination,
+  IPublicUser,
+  IUser,
+  RestoreAccountDto,
+  SearchUsersParams,
+  UpdateProfileDto,
+} from "@/lib/types"
 
 export const userService = {
   getProfile: () =>
     api<{ profile: IUser }>("/user", {
       method: "GET",
+    }),
+
+  updateProfile: (data: UpdateProfileDto) =>
+    api<{ profile: IUser }>("/user/profile", {
+      method: "PATCH",
+      body: JSON.stringify(data),
     }),
 
   shareProfile: (userId: string) =>
@@ -23,8 +39,48 @@ export const userService = {
       method: "DELETE",
     }),
 
+  changePassword: (data: ChangePasswordDto) =>
+    api<{ access_token: string; refresh_token: string }>("/user/change-password", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  softDeleteAccount: () =>
+    api<void>("/user/soft-delete", {
+      method: "DELETE",
+    }),
+
+  restoreAccount: (data: RestoreAccountDto) =>
+    api<AuthCredentials>("/user/restore-account", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
   deleteAccount: () =>
     api<void>("/user/delete-account", {
       method: "DELETE",
     }),
+
+  blockUser: (targetUserId: string) =>
+    api<void>(`/user/block/${targetUserId}`, {
+      method: "POST",
+    }),
+
+  unblockUser: (targetUserId: string) =>
+    api<void>(`/user/unblock/${targetUserId}`, {
+      method: "DELETE",
+    }),
+
+  getBlockedUsers: (params?: { page?: number; limit?: number }) =>
+    api<{ blockedUsers: IPagination<BlockedUser> }>("/user/blocked", {
+      method: "GET",
+      params,
+    }),
+
+  searchUsers: (params: SearchUsersParams) =>
+    api<{ users: IPagination<IPublicUser> }>("/user/search", {
+      method: "GET",
+      params,
+    }),
 }
+

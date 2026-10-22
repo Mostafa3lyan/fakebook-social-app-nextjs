@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Shield, ShieldCheck, ShieldAlert, Loader2, KeyRound, Check } from "lucide-react"
+import { Shield, ShieldCheck, ShieldAlert, Loader2, KeyRound, Check, ShieldOff } from "lucide-react"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 
 import { IUser } from "@/lib/types"
@@ -25,6 +25,7 @@ interface TwoFactorSettingsProps {
 
 export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
   const [isOpen, setIsOpen] = React.useState(false)
+  const [mode, setMode] = React.useState<"enable" | "disable">("enable")
   const [otp, setOtp] = React.useState("")
   const {
     request2fa,
@@ -34,11 +35,18 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
     isEnabling,
     enableError,
     resetEnable,
+    disable2fa,
+    isDisabling,
+    disableError,
+    resetDisable,
   } = useEnable2fa()
 
-  const handleStartEnable = () => {
+  const handleStartFlow = (action: "enable" | "disable") => {
+    setMode(action)
     setOtp("")
-    resetEnable()
+    if (action === "enable") resetEnable()
+    else resetDisable()
+
     request2fa(undefined, {
       onSuccess: () => {
         setIsOpen(true)
@@ -49,15 +57,27 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
   const handleConfirmOtp = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     if (otp.length !== 6) return
-    enable2fa(otp, {
-      onSuccess: () => {
-        setIsOpen(false)
-        setOtp("")
-      },
-    })
+
+    if (mode === "enable") {
+      enable2fa(otp, {
+        onSuccess: () => {
+          setIsOpen(false)
+          setOtp("")
+        },
+      })
+    } else {
+      disable2fa(otp, {
+        onSuccess: () => {
+          setIsOpen(false)
+          setOtp("")
+        },
+      })
+    }
   }
 
   const isEnabled = user.twoFactorVerified
+  const isPendingAction = isEnabling || isDisabling
+  const actionError = mode === "enable" ? enableError : disableError
 
   return (
     <>
@@ -92,11 +112,31 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
               : "Protect your account from unauthorized access. When enabled, signing in will require a one-time verification code sent directly to your registered email address."}
           </p>
 
-          {!isEnabled && (
-            <div className="pt-1">
+          <div className="pt-1">
+            {isEnabled ? (
               <Button
                 type="button"
-                onClick={handleStartEnable}
+                variant="outline"
+                onClick={() => handleStartFlow("disable")}
+                disabled={isRequesting}
+                className="w-full sm:w-auto min-h-11 font-semibold text-destructive hover:bg-destructive/10 border-destructive/30 cursor-pointer"
+              >
+                {isRequesting ? (
+                  <>
+                    <Loader2 className="size-4 mr-2 animate-spin" aria-hidden="true" />
+                    Sending Code...
+                  </>
+                ) : (
+                  <>
+                    <ShieldOff className="size-4 mr-2" aria-hidden="true" />
+                    Disable Two-Factor Authentication
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                onClick={() => handleStartFlow("enable")}
                 disabled={isRequesting}
                 className="w-full sm:w-auto min-h-11 font-semibold cursor-pointer"
               >
@@ -112,8 +152,8 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
                   </>
                 )}
               </Button>
-            </div>
-          )}
+            )}
+          </div>
 
           {requestError && <ErrorComponent errorMessage={requestError.message} />}
         </CardContent>
@@ -127,10 +167,10 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
               <KeyRound className="size-6" aria-hidden="true" />
             </div>
             <DialogTitle className="text-center text-xl font-bold font-heading">
-              Confirm 2FA Activation
+              {mode === "enable" ? "Confirm 2FA Activation" : "Confirm 2FA Deactivation"}
             </DialogTitle>
             <DialogDescription className="text-center text-sm text-muted-foreground">
-              Enter the 6-digit code sent to <strong className="text-foreground">{user.email}</strong> to activate two-factor authentication.
+              Enter the 6-digit code sent to <strong className="text-foreground">{user.email}</strong> to {mode === "enable" ? "activate" : "turn off"} two-factor authentication.
             </DialogDescription>
           </DialogHeader>
 
@@ -145,7 +185,7 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 autoFocus
-                disabled={isEnabling}
+                disabled={isPendingAction}
                 aria-label="6-digit two-factor verification code"
               >
                 {[...Array(6)].map((_, i) => (
@@ -156,24 +196,24 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
               </InputOTP>
             </div>
 
-            {enableError && <ErrorComponent errorMessage={enableError.message} />}
+            {actionError && <ErrorComponent errorMessage={actionError.message} />}
 
             <DialogFooter className="flex-col sm:flex-row gap-2 pt-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
-                disabled={isEnabling}
+                disabled={isPendingAction}
                 className="w-full sm:w-auto min-h-11"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                disabled={otp.length !== 6 || isEnabling}
+                disabled={otp.length !== 6 || isPendingAction}
                 className="w-full sm:w-auto min-h-11 font-semibold"
               >
-                {isEnabling ? (
+                {isPendingAction ? (
                   <>
                     <Loader2 className="size-4 mr-2 animate-spin" aria-hidden="true" />
                     Verifying...
@@ -181,7 +221,7 @@ export function TwoFactorSettings({ user }: TwoFactorSettingsProps) {
                 ) : (
                   <>
                     <Check className="size-4 mr-2" aria-hidden="true" />
-                    Confirm & Enable
+                    {mode === "enable" ? "Confirm & Enable" : "Confirm & Disable"}
                   </>
                 )}
               </Button>

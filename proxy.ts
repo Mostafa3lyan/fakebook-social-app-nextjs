@@ -10,6 +10,7 @@ const publicRoutes = new Set([
   "/forgot-password",
   "/verify-otp",
   "/reset-password",
+  "/restore-account",
 ])
 
 // Routes only accessible when logged OUT — redirect to feed if already authenticated

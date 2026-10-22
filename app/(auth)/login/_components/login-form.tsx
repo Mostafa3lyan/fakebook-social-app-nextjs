@@ -104,7 +104,25 @@ export function LoginForm() {
             )}
           </div>
 
-          {error && <ErrorComponent errorMessage={error.message} />}
+          {error &&
+            (error.message.toLowerCase().includes("deactivated") ? (
+              <div
+                role="alert"
+                className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-700 dark:text-amber-400 space-y-2"
+              >
+                <p className="font-medium">{error.message}</p>
+                <div>
+                  <Link
+                    href="/restore-account"
+                    className="inline-flex items-center text-xs font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-0.5"
+                  >
+                    Restore your account now &rarr;
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <ErrorComponent errorMessage={error.message} />
+            ))}
 
           {/* Submit */}
           <Button

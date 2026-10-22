@@ -27,6 +27,16 @@ export function useEnable2fa() {
     },
   })
 
+  const disableMutation = useMutation<void, ApiError, string>({
+    mutationFn: async (otp: string) => {
+      await authService.disable2fa(otp)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["current-user"] })
+      toast.success("Two-Factor Authentication disabled.")
+    },
+  })
+
   return {
     request2fa: requestMutation.mutate,
     isRequesting: requestMutation.isPending,
@@ -39,5 +49,11 @@ export function useEnable2fa() {
     enableError: enableMutation.error,
     isSuccess: enableMutation.isSuccess,
     resetEnable: enableMutation.reset,
+
+    disable2fa: disableMutation.mutate,
+    isDisabling: disableMutation.isPending,
+    disableError: disableMutation.error,
+    isDisableSuccess: disableMutation.isSuccess,
+    resetDisable: disableMutation.reset,
   }
 }

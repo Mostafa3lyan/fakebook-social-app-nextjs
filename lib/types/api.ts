@@ -36,3 +36,6 @@ export interface PaginatedResult<T> {
   hasNextPage?: boolean
   hasPrevPage?: boolean
 }
+
+export type IPagination<T> = PaginatedResult<T>
+

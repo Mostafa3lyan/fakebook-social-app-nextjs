@@ -3,12 +3,12 @@ import { ApiErrorResponse, ApiResponse } from "@/lib/types"
 
 export type ClientRequestConfig = Omit<RequestInit, "headers"> & {
   headers?: Record<string, string>
-  params?: Record<string, string | number | boolean | undefined | null>
+  params?: Record<string, unknown> | object
 }
 
 function buildUrl(
   endpoint: string,
-  params?: Record<string, string | number | boolean | undefined | null>
+  params?: Record<string, unknown> | object
 ): string {
   const normalizedEndpoint = endpoint.startsWith("/") ? endpoint.slice(1) : endpoint
   const url = new URL(`/api/backend/${normalizedEndpoint}`, window.location.origin)

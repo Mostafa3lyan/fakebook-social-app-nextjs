@@ -3,8 +3,10 @@
 import * as React from "react"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { AvatarSettings } from "./_components/avatar-settings"
+import { EditProfileForm } from "./_components/edit-profile-form"
 import { ChangePasswordForm } from "./_components/change-password-form"
 import { TwoFactorSettings } from "./_components/two-factor-settings"
+import { BlockedUsersList } from "./_components/blocked-users-list"
 import { DangerZone } from "./_components/danger-zone"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ErrorComponent } from "@/components/shared/error-component"
@@ -20,6 +22,7 @@ export default function SettingsPage() {
           <Skeleton className="h-4 w-72" />
         </div>
         <Skeleton className="h-44 w-full rounded-xl" />
+        <Skeleton className="h-72 w-full rounded-xl" />
         <Skeleton className="h-64 w-full rounded-xl" />
         <Skeleton className="h-40 w-full rounded-xl" />
       </div>
@@ -49,8 +52,10 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         <AvatarSettings user={user} />
+        <EditProfileForm user={user} />
         <ChangePasswordForm />
         <TwoFactorSettings user={user} />
+        <BlockedUsersList />
         <DangerZone />
       </div>
     </div>

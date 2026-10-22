@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { AlertTriangle, LogOut, Trash2, Loader2 } from "lucide-react"
+import { AlertTriangle, LogOut, Trash2, Loader2, UserMinus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,12 +18,18 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useLogout } from "@/hooks/use-logout"
 import { useDeleteAccount } from "../_hooks/use-delete-account"
+import { useDeactivateAccount } from "../_hooks/use-deactivate-account"
 import { ErrorComponent } from "@/components/shared/error-component"
 
 export function DangerZone() {
   const { logout, isLoggingOut } = useLogout()
-  const { deleteAccount, isDeleting, error } = useDeleteAccount()
+  const { deleteAccount, isDeleting, error: deleteError } = useDeleteAccount()
+  const { deactivateAccount, isDeactivating, error: deactivateError } = useDeactivateAccount()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
+  const [isDeactivateDialogOpen, setIsDeactivateDialogOpen] = React.useState(false)
+
+  const isBusy = isLoggingOut || isDeleting || isDeactivating
+  const error = deleteError || deactivateError
 
   return (
     <Card className="border-destructive/40 bg-destructive/5 shadow-xs">
@@ -53,7 +59,7 @@ export function DangerZone() {
             type="button"
             variant="outline"
             onClick={() => logout("all")}
-            disabled={isLoggingOut || isDeleting}
+            disabled={isBusy}
             className="w-full sm:w-auto min-h-11 border-destructive/30 text-destructive hover:bg-destructive/10 cursor-pointer"
           >
             {isLoggingOut ? (
@@ -65,14 +71,69 @@ export function DangerZone() {
           </Button>
         </div>
 
-        {/* Delete Account */}
+        {/* Deactivate Account (Soft Delete with 30-day restore) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-amber-500/20 bg-background/50">
+          <div className="space-y-0.5">
+            <h3 className="text-sm font-semibold text-foreground">
+              Deactivate your account
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Temporarily disable your profile. You can restore your account within 30 days simply by signing back in.
+            </p>
+          </div>
+
+          <AlertDialog open={isDeactivateDialogOpen} onOpenChange={setIsDeactivateDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isBusy}
+                className="w-full sm:w-auto min-h-11 font-semibold border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 cursor-pointer"
+              >
+                <UserMinus className="size-4 mr-2" aria-hidden="true" />
+                Deactivate Account
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <UserMinus className="size-5 text-amber-500" aria-hidden="true" />
+                  Deactivate your Fakebook account?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-muted-foreground">
+                  Your profile and content will be hidden from other users. You can reactivate your account at any time within the next 30 days by signing in. After 30 days, your account will be permanently erased.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="gap-2 sm:gap-0">
+                <AlertDialogCancel className="min-h-11">
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deactivateAccount()}
+                  className="bg-amber-600 text-white hover:bg-amber-700 min-h-11 font-semibold"
+                >
+                  {isDeactivating ? (
+                    <>
+                      <Loader2 className="size-4 mr-2 animate-spin" aria-hidden="true" />
+                      Deactivating...
+                    </>
+                  ) : (
+                    "Yes, Deactivate Account"
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+
+        {/* Permanently Delete Account (Hard Delete) */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border border-destructive/20 bg-background/50">
           <div className="space-y-0.5">
             <h3 className="text-sm font-semibold text-destructive">
-              Delete your account
+              Permanently delete your account
             </h3>
             <p className="text-xs text-muted-foreground">
-              Permanently delete your profile, posts, reactions, comments, and media. This action cannot be undone.
+              Permanently purge your profile, posts, reactions, comments, and media. This action cannot be undone.
             </p>
           </div>
 
@@ -81,7 +142,7 @@ export function DangerZone() {
               <Button
                 type="button"
                 variant="destructive"
-                disabled={isLoggingOut || isDeleting}
+                disabled={isBusy}
                 className="w-full sm:w-auto min-h-11 font-semibold cursor-pointer"
               >
                 <Trash2 className="size-4 mr-2" aria-hidden="true" />
@@ -95,7 +156,7 @@ export function DangerZone() {
                   Are you absolutely sure?
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-muted-foreground">
-                  This action is permanent and cannot be undone. All of your posts, comments, photos, friendships, and identity credentials will be permanently erased.
+                  This action is permanent and immediate. All of your posts, comments, photos, friendships, and identity credentials will be permanently erased from our databases.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="gap-2 sm:gap-0">

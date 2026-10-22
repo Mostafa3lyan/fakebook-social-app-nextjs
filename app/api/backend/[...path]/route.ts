@@ -120,10 +120,11 @@ async function handleProxyRequest(
         })
       }
 
-      // 2. If session is destroyed (logout, delete account)
+      // 2. If session is destroyed (logout, delete account, soft delete)
       if (
         targetPath === "user/logout" ||
-        targetPath === "user/delete-account"
+        targetPath === "user/delete-account" ||
+        targetPath === "user/soft-delete"
       ) {
         nextResponse.cookies.delete(ACCESS_TOKEN_COOKIE)
         nextResponse.cookies.delete(REFRESH_TOKEN_COOKIE)
