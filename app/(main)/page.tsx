@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import Link from "next/link"
 import {
   Sparkles,
@@ -12,15 +11,24 @@ import {
 } from "lucide-react"
 
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { usePosts } from "@/hooks/use-posts"
 import { UserAvatar } from "@/components/shared/user-avatar"
+import { PostFeed } from "@/components/posts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export default function HomePage() {
-  const { user, isLoading } = useCurrentUser()
+  const { user, isLoading: isUserLoading } = useCurrentUser()
+  const {
+    posts,
+    isLoading: isPostsLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = usePosts()
 
-  if (isLoading) {
+  if (isUserLoading) {
     return (
       <div className="max-w-2xl mx-auto py-2 space-y-4">
         <Skeleton className="h-28 w-full rounded-xl" />
@@ -126,6 +134,20 @@ export default function HomePage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Main Social Feed */}
+      <div className="pt-2">
+        <h2 className="sr-only">News Feed</h2>
+        <PostFeed
+          posts={posts}
+          isLoading={isPostsLoading}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          emptyTitle="Your feed is fresh and quiet"
+          emptyDescription="Connect with more friends or be the first to share an update or photo today!"
+        />
+      </div>
     </div>
   )
 }

@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { IPublicUser, IUser } from "@/lib/types"
 
+import { resolveMediaUrl } from "@/lib/utils/media"
+
 interface UserAvatarProps extends Omit<React.ComponentProps<typeof Avatar>, "size"> {
   user?: Partial<IUser> | Partial<IPublicUser> | null
   src?: string | null
@@ -37,11 +39,7 @@ export function UserAvatar({
   const rawPicture = src !== undefined ? src : user?.profilePicture
 
   const imageSrc = React.useMemo(() => {
-    if (!rawPicture) return undefined
-    if (rawPicture.startsWith("http://") || rawPicture.startsWith("https://") || rawPicture.startsWith("data:")) {
-      return rawPicture
-    }
-    return `/api/media/${rawPicture}`
+    return resolveMediaUrl(rawPicture) || undefined
   }, [rawPicture])
 
   const initials = React.useMemo(() => {

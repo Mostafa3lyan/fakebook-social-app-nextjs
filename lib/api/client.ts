@@ -1,5 +1,6 @@
 import { ApiError } from "./errors"
 import { ApiErrorResponse, ApiResponse } from "@/lib/types"
+import { resolveMediaUrl } from "@/lib/utils/media"
 
 export type ClientRequestConfig = Omit<RequestInit, "headers"> & {
   headers?: Record<string, string>
@@ -80,18 +81,4 @@ export async function api<T = unknown>(
   return responseData as ApiResponse<T>
 }
 
-/**
- * Resolves any image asset identifier to a loadable URL.
- * Supports:
- * - External URLs (e.g. Google profile photos: https://...)
- * - Pre-signed S3 URLs (https://...)
- * - Internal S3 asset keys (fakebook/users/... or fakebook/posts/...) -> routed through /api/media/*
- */
-export function resolveAssetUrl(assetKeyOrUrl?: string | null): string {
-  if (!assetKeyOrUrl) return ""
-  if (assetKeyOrUrl.startsWith("http://") || assetKeyOrUrl.startsWith("https://") || assetKeyOrUrl.startsWith("blob:")) {
-    return assetKeyOrUrl
-  }
-  const cleanKey = assetKeyOrUrl.startsWith("/") ? assetKeyOrUrl.slice(1) : assetKeyOrUrl
-  return `/api/media/${cleanKey}`
-}
+export const resolveAssetUrl = resolveMediaUrl

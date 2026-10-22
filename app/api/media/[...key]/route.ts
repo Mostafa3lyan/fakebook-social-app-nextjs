@@ -10,14 +10,23 @@ interface MediaRouteContext {
 
 export async function GET(req: NextRequest, context: MediaRouteContext) {
   const { key } = await context.params
-  const assetKey = key.join("/")
-  const backendBase = process.env.BACKEND_URL || "http://localhost:3000"
+  let assetKey = key.join("/")
 
+  // Strip leading "uploads/" if accidentally duplicated in the route segments
+  assetKey = assetKey.replace(/^uploads\//, "")
+
+  // If the assetKey is already an absolute URL, redirect or fetch directly
+  if (assetKey.startsWith("http://") || assetKey.startsWith("https://")) {
+    return NextResponse.redirect(assetKey)
+  }
+
+  const backendBase = process.env.BACKEND_URL || "http://localhost:3000"
   const search = req.nextUrl.search
   const targetUrl = `${backendBase}/uploads/${assetKey}${search}`
 
+  const authHeader = req.headers.get("authorization")
   const { accessToken: initialAccessToken, refreshToken } = await getSessionTokens()
-  let accessToken = initialAccessToken
+  let accessToken = authHeader?.replace(/^Bearer\s+/i, "") || initialAccessToken
 
   const fetchAsset = (token: string | null) => {
     const headers = new Headers()

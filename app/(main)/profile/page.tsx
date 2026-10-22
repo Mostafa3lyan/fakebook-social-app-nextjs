@@ -2,15 +2,22 @@
 
 import * as React from "react"
 import { useCurrentUser } from "@/hooks/use-current-user"
+import { useUserPosts } from "@/hooks/use-user-posts"
 import { ProfileHeader } from "./_components/profile-header"
 import { ProfileInfoCard } from "./_components/profile-info-card"
+import { PostFeed } from "@/components/posts"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ErrorComponent } from "@/components/shared/error-component"
-import { Card, CardContent } from "@/components/ui/card"
-import { MessageSquareText } from "lucide-react"
 
 export default function ProfilePage() {
   const { user, isLoading, isError, error } = useCurrentUser()
+  const {
+    posts,
+    isLoading: isPostsLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useUserPosts({ userId: user?._id ?? "" })
 
   if (isLoading) {
     return (
@@ -50,20 +57,27 @@ export default function ProfilePage() {
       <ProfileHeader user={user} />
       <ProfileInfoCard user={user} />
 
-      {/* Posts Section Placeholder (Phase 5 integration point) */}
-      <Card className="border-border shadow-2xs">
-        <CardContent className="p-8 text-center space-y-2">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <MessageSquareText className="size-6" aria-hidden="true" />
-          </div>
+      {/* User's Posts Timeline */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold font-heading text-foreground">
-            No Posts Yet
+            My Posts
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Your posts and social shares will appear here once you create them on your news feed.
-          </p>
-        </CardContent>
-      </Card>
+          <span className="text-xs text-muted-foreground">
+            {posts.length} {posts.length === 1 ? "post" : "posts"}
+          </span>
+        </div>
+
+        <PostFeed
+          posts={posts}
+          isLoading={isPostsLoading}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          emptyTitle="You haven't posted anything yet"
+          emptyDescription="Share your thoughts, updates, and photos with your friends."
+        />
+      </div>
     </div>
   )
 }

@@ -24,6 +24,19 @@ export const postService = {
       method: "GET",
     }),
 
+  getUserPosts: (
+    userId: string,
+    params: { page?: number; limit?: number; search?: string } = {}
+  ) =>
+    api<{ posts: PaginatedResult<IPost> }>(`/post/user/${userId}`, {
+      method: "GET",
+      params: {
+        page: params.page ?? 1,
+        limit: params.limit ?? 10,
+        search: params.search || undefined,
+      },
+    }),
+
   createPost: (payload: CreatePostPayload) => {
     const formData = new FormData()
     if (payload.content) formData.append("content", payload.content)

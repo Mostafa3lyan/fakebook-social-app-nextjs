@@ -7,7 +7,9 @@ import Link from "next/link"
 import { ArrowLeft, Eye, ShieldAlert } from "lucide-react"
 
 import { userService } from "@/services/user.service"
+import { useUserPosts } from "@/hooks/use-user-posts"
 import { UserAvatar } from "@/components/shared/user-avatar"
+import { PostFeed } from "@/components/posts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -26,6 +28,14 @@ export default function PublicUserProfilePage() {
     enabled: Boolean(userId),
     staleTime: 1000 * 60 * 2,
   })
+
+  const {
+    posts,
+    isLoading: isPostsLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useUserPosts({ userId: userId ?? "" })
 
   if (isLoading) {
     return (
@@ -105,6 +115,22 @@ export default function PublicUserProfilePage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Target User's Posts Feed */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold font-heading text-foreground">
+          Posts by {data.firstName}
+        </h2>
+        <PostFeed
+          posts={posts}
+          isLoading={isPostsLoading}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          emptyTitle={`No posts from ${data.firstName} yet`}
+          emptyDescription="When they share public posts or photos with you, they'll appear here."
+        />
+      </div>
     </div>
   )
 }
