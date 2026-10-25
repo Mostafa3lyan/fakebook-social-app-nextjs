@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { IPost } from "@/lib/types"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 import { PostCardHeader } from "./post-card-header"
 import { PostCardActions } from "./post-card-actions"
 import { PostAttachments } from "./post-attachments"

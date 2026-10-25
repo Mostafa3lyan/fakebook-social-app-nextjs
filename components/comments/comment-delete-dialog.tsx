@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useDeleteComment } from "@/hooks/use-delete-comment"
+import { useDeleteComment } from "@/hooks/comments/use-delete-comment"
 
 interface CommentDeleteDialogProps {
   postId: string

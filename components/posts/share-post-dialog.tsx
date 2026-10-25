@@ -21,9 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { IPost, PostVisibilityEnum } from "@/lib/types"
-import { useSharePost } from "@/hooks/use-share-post"
+import { useSharePost } from "@/hooks/posts/use-share-post"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 
 interface SharePostDialogProps {
   post: IPost

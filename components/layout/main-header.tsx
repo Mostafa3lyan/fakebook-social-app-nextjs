@@ -27,8 +27,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useLogout } from "@/hooks/use-logout"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useLogout } from "@/hooks/user/use-logout"
 
 export function MainHeader() {
   const pathname = usePathname()

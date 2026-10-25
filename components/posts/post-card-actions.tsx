@@ -5,8 +5,8 @@ import { ThumbsUp, MessageCircle, Share2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { IPost, PostVisibilityEnum, ReactionTypeEnum } from "@/lib/types"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useReactPost } from "@/hooks/use-react-post"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useReactPost } from "@/hooks/posts/use-react-post"
 import { REACTION_CONFIG, ReactionPicker } from "./reaction-picker"
 import { cn } from "@/lib/utils"
 

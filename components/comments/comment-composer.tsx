@@ -8,9 +8,9 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useCreateComment } from "@/hooks/use-create-comment"
-import { useCreateReply } from "@/hooks/use-create-reply"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useCreateComment } from "@/hooks/comments/use-create-comment"
+import { useCreateReply } from "@/hooks/comments/use-create-reply"
 import { cn } from "@/lib/utils"
 
 interface CommentComposerProps {

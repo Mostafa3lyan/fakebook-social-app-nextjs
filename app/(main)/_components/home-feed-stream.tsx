@@ -1,6 +1,6 @@
 "use client"
 
-import { usePosts } from "@/hooks/use-posts"
+import { usePosts } from "@/hooks/posts/use-posts"
 import { PostFeed } from "@/components/posts"
 
 export function HomeFeedStream() {

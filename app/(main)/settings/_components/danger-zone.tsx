@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { useLogout } from "@/hooks/use-logout"
+import { useLogout } from "@/hooks/user/use-logout"
 import { useDeleteAccount } from "../_hooks/use-delete-account"
 import { useDeactivateAccount } from "../_hooks/use-deactivate-account"
 import { ErrorComponent } from "@/components/shared/error-component"

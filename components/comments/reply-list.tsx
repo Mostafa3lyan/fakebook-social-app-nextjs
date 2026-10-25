@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Loader2 } from "lucide-react"
 
-import { useReplies } from "@/hooks/use-replies"
+import { useReplies } from "@/hooks/comments/use-replies"
 import { Skeleton } from "@/components/ui/skeleton"
 import { IComment } from "@/lib/types"
 

@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useDeletePost } from "@/hooks/use-delete-post"
+import { useDeletePost } from "@/hooks/posts/use-delete-post"
 
 interface PostDeleteDialogProps {
   postId: string

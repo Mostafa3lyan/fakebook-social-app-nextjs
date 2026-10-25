@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Sparkles, User, Settings, ShieldCheck } from "lucide-react"
 
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"

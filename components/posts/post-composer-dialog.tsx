@@ -26,8 +26,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useCreatePost } from "@/hooks/use-create-post"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useCreatePost } from "@/hooks/posts/use-create-post"
 import { IPostLocation, PostVisibilityEnum } from "@/lib/types"
 import { PostVisibilitySelect } from "./post-visibility-select"
 import { PostLocationPopover } from "./post-location-popover"

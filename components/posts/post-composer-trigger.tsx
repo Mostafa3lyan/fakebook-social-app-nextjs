@@ -6,7 +6,7 @@ import { Image as ImageIcon, Smile, MapPin } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 import { PostComposerDialog } from "./post-composer-dialog"
 import { cn } from "@/lib/utils"
 

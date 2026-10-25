@@ -1,6 +1,6 @@
 "use client"
 
-import { useUserPosts } from "@/hooks/use-user-posts"
+import { useUserPosts } from "@/hooks/posts/use-user-posts"
 import { PostComposerTrigger, PostFeed } from "@/components/posts"
 
 interface ProfileTimelineProps {

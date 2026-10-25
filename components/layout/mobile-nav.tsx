@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Home, User, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 
 export function MobileNav() {
   const pathname = usePathname()

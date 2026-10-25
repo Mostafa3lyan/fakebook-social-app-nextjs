@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation"
 import { Home, User, Settings, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useLogout } from "@/hooks/use-logout"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useLogout } from "@/hooks/user/use-logout"
 import { Button } from "@/components/ui/button"
 
 export function LeftSidebar() {

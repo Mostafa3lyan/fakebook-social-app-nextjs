@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { REACTION_CONFIG, ReactionPicker } from "@/components/posts/reaction-picker"
 import { IComment, ReactionTypeEnum } from "@/lib/types"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useReactComment } from "@/hooks/use-react-comment"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
+import { useReactComment } from "@/hooks/comments/use-react-comment"
 import { formatRelativeTime } from "@/lib/utils/date"
 import { cn } from "@/lib/utils"
 

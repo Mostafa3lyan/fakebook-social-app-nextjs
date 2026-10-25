@@ -1,6 +1,6 @@
 "use client"
 
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 import { AvatarSettings } from "./avatar-settings"
 import { EditProfileForm } from "./edit-profile-form"
 import { ChangePasswordForm } from "./change-password-form"

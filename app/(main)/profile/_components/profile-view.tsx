@@ -1,6 +1,6 @@
 "use client"
 
-import { useCurrentUser } from "@/hooks/use-current-user"
+import { useCurrentUser } from "@/hooks/user/use-current-user"
 import { ProfileHeader } from "./profile-header"
 import { ProfileInfoCard } from "./profile-info-card"
 import { ProfileTimeline } from "./profile-timeline"
