@@ -23,7 +23,7 @@ export function LeftSidebar() {
 
   return (
     <aside
-      className="hidden lg:flex flex-col w-64 shrink-0 p-4 border-r border-border min-h-[calc(100vh-3.5rem)] sticky top-14 gap-4 bg-card/40 backdrop-blur-xs select-none"
+      className="hidden lg:flex flex-col w-64 shrink-0 p-4 border-r border-border h-[calc(100vh-3.5rem)] sticky top-14 self-start overflow-y-auto gap-4 bg-card/40 backdrop-blur-xs select-none"
       aria-label="Desktop Sidebar Navigation"
     >
       {/* User profile snippet */}

@@ -4,9 +4,6 @@ import * as React from "react"
 import Image from "next/image"
 import {
   X,
-  Globe,
-  Users,
-  Lock,
   Image as ImageIcon,
   Smile,
   MapPin,
@@ -24,22 +21,16 @@ import {
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Input } from "@/components/ui/input"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { useCreatePost } from "@/hooks/use-create-post"
 import { IPostLocation, PostVisibilityEnum } from "@/lib/types"
+import { PostVisibilitySelect } from "./post-visibility-select"
+import { PostLocationPopover } from "./post-location-popover"
 
 interface PostComposerDialogProps {
   open: boolean
@@ -95,10 +86,6 @@ function PostComposerForm({
     emoji: string
   } | null>(null)
   const [locationName, setLocationName] = React.useState("")
-  const [locationPopoverOpen, setLocationPopoverOpen] = React.useState(
-    initialMode === "location"
-  )
-  const [tempLocation, setTempLocation] = React.useState("")
 
   const fileInputRef = React.useRef<HTMLInputElement | null>(null)
   const itemsRef = React.useRef<FileAttachmentItem[]>([])
@@ -164,11 +151,6 @@ function PostComposerForm({
     setAttachmentItems((prev) => prev.filter((_, idx) => idx !== index))
   }
 
-  const handleApplyLocation = () => {
-    setLocationName(tempLocation.trim())
-    setLocationPopoverOpen(false)
-  }
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -224,34 +206,11 @@ function PostComposerForm({
           <p className="font-semibold text-sm text-foreground leading-tight">
             {authorName}
           </p>
-          <Select
+          <PostVisibilitySelect
             value={visibility}
-            onValueChange={(val) => setVisibility(val as PostVisibilityEnum)}
-          >
-            <SelectTrigger className="h-7 w-[115px] px-2 text-xs rounded-full bg-muted/60 hover:bg-muted border-border font-medium">
-              <SelectValue placeholder="Audience" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={PostVisibilityEnum.PUBLIC}>
-                <div className="flex items-center gap-1.5 text-xs">
-                  <Globe className="size-3 text-muted-foreground" />
-                  <span>Public</span>
-                </div>
-              </SelectItem>
-              <SelectItem value={PostVisibilityEnum.FRIENDS}>
-                <div className="flex items-center gap-1.5 text-xs">
-                  <Users className="size-3 text-muted-foreground" />
-                  <span>Friends</span>
-                </div>
-              </SelectItem>
-              <SelectItem value={PostVisibilityEnum.ONLY_ME}>
-                <div className="flex items-center gap-1.5 text-xs">
-                  <Lock className="size-3 text-muted-foreground" />
-                  <span>Only Me</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
+            onChange={setVisibility}
+            disabled={isPending}
+          />
         </div>
       </div>
 
@@ -297,7 +256,7 @@ function PostComposerForm({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         disabled={isPending}
-        className="min-h-[120px] resize-none text-base border-none shadow-none focus-visible:ring-0 p-1 placeholder:text-muted-foreground/70"
+        className="min-h-30 resize-none text-base border-none shadow-none focus-visible:ring-0 p-1 placeholder:text-muted-foreground/70"
       />
 
       {/* Image Upload Area & Previews */}
@@ -444,47 +403,11 @@ function PostComposerForm({
           </Popover>
 
           {/* Location Check-in Trigger */}
-          <Popover open={locationPopoverOpen} onOpenChange={setLocationPopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                disabled={isPending}
-                className="size-9 rounded-full text-rose-500 hover:bg-rose-500/10 cursor-pointer min-h-11 min-w-11"
-                aria-label="Add location"
-              >
-                <MapPin className="size-5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-72 p-3 space-y-2.5">
-              <p className="text-xs font-semibold text-foreground">
-                Where are you?
-              </p>
-              <div className="flex items-center gap-1.5">
-                <Input
-                  placeholder="e.g. Cairo, Egypt"
-                  value={tempLocation}
-                  onChange={(e) => setTempLocation(e.target.value)}
-                  className="h-8 text-xs"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault()
-                      handleApplyLocation()
-                    }
-                  }}
-                />
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleApplyLocation}
-                  className="h-8 px-2.5 text-xs font-semibold"
-                >
-                  Set
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <PostLocationPopover
+            locationName={locationName}
+            onApplyLocation={setLocationName}
+            disabled={isPending}
+          />
         </div>
       </div>
 

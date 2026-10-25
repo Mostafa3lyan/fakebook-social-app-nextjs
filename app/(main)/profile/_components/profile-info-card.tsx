@@ -1,9 +1,8 @@
-"use client"
-
 import * as React from "react"
 import { Mail, Phone, Calendar, User, Shield, Eye } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { IUser } from "@/lib/types"
+import { formatFullDate } from "@/lib/utils/date"
 
 interface ProfileInfoCardProps {
   user: IUser
@@ -28,13 +27,7 @@ export function ProfileInfoCard({ user }: ProfileInfoCardProps) {
     },
     {
       label: "Date of Birth",
-      value: user.dateOfBirth
-        ? new Date(user.dateOfBirth).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })
-        : "Not provided",
+      value: formatFullDate(user.dateOfBirth),
       icon: Calendar,
     },
     {

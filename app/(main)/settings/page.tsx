@@ -1,44 +1,13 @@
-"use client"
+import type { Metadata } from "next"
 
-import * as React from "react"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { AvatarSettings } from "./_components/avatar-settings"
-import { EditProfileForm } from "./_components/edit-profile-form"
-import { ChangePasswordForm } from "./_components/change-password-form"
-import { TwoFactorSettings } from "./_components/two-factor-settings"
-import { BlockedUsersList } from "./_components/blocked-users-list"
-import { DangerZone } from "./_components/danger-zone"
-import { Skeleton } from "@/components/ui/skeleton"
-import { ErrorComponent } from "@/components/shared/error-component"
+import { SettingsContainer } from "./_components/settings-container"
+
+export const metadata: Metadata = {
+  title: "Account Settings",
+  description: "Manage your personal information, security credentials, and session preferences.",
+}
 
 export default function SettingsPage() {
-  const { user, isLoading, isError, error } = useCurrentUser()
-
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto py-2 space-y-6">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-72" />
-        </div>
-        <Skeleton className="h-44 w-full rounded-xl" />
-        <Skeleton className="h-72 w-full rounded-xl" />
-        <Skeleton className="h-64 w-full rounded-xl" />
-        <Skeleton className="h-40 w-full rounded-xl" />
-      </div>
-    )
-  }
-
-  if (isError || !user) {
-    return (
-      <div className="max-w-md mx-auto py-12">
-        <ErrorComponent
-          errorMessage={error instanceof Error ? error.message : "Failed to load account settings"}
-        />
-      </div>
-    )
-  }
-
   return (
     <div className="max-w-4xl mx-auto py-2 space-y-6">
       <div className="space-y-1">
@@ -50,14 +19,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <div className="space-y-6">
-        <AvatarSettings user={user} />
-        <EditProfileForm user={user} />
-        <ChangePasswordForm />
-        <TwoFactorSettings user={user} />
-        <BlockedUsersList />
-        <DangerZone />
-      </div>
+      <SettingsContainer />
     </div>
   )
 }

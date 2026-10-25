@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { IUser } from "@/lib/types"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { Button } from "@/components/ui/button"
+import { formatMonthYear } from "@/lib/utils/date"
 
 interface ProfileHeaderProps {
   user: IUser
@@ -29,11 +30,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   }
 
   const formattedJoinDate = React.useMemo(() => {
-    if (!user.createdAt) return "Recently"
-    return new Date(user.createdAt).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "long",
-    })
+    return formatMonthYear(user.createdAt)
   }, [user.createdAt])
 
   return (
