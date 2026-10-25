@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import {
   Home,
   User,
+  Users,
   Settings,
   Search,
   LogOut,
@@ -38,6 +39,7 @@ export function MainHeader() {
 
   const navItems = [
     { label: "Home", href: "/", icon: Home },
+    { label: "Friends", href: "/friends", icon: Users },
     { label: "Profile", href: "/profile", icon: User },
     { label: "Settings", href: "/settings", icon: Settings },
   ]
@@ -156,6 +158,12 @@ export function MainHeader() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link href="/friends" className="cursor-pointer flex items-center">
+                    <Users className="mr-2 size-4" aria-hidden="true" />
+                    <span>Friends</span>
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/profile" className="cursor-pointer flex items-center">
                     <User className="mr-2 size-4" aria-hidden="true" />

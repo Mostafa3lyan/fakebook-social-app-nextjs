@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, Settings, LogOut } from "lucide-react"
+import { Home, User, Users, Settings, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { useCurrentUser } from "@/hooks/user/use-current-user"
@@ -17,6 +17,7 @@ export function LeftSidebar() {
 
   const links = [
     { label: "News Feed", href: "/", icon: Home },
+    { label: "Friends", href: "/friends", icon: Users },
     { label: "My Profile", href: "/profile", icon: User },
     { label: "Settings & Privacy", href: "/settings", icon: Settings },
   ]

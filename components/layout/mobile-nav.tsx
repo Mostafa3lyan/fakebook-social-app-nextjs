@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, Settings } from "lucide-react"
+import { Home, User, Users, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { useCurrentUser } from "@/hooks/user/use-current-user"
@@ -14,6 +14,7 @@ export function MobileNav() {
 
   const navItems = [
     { label: "Home", href: "/", icon: Home },
+    { label: "Friends", href: "/friends", icon: Users },
     { label: "Profile", href: "/profile", icon: User },
     { label: "Settings", href: "/settings", icon: Settings },
   ]

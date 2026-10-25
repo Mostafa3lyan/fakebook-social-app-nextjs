@@ -1,0 +1,97 @@
+"use client"
+
+import * as React from "react"
+import { Users, UserCheck, Send } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useReceivedFriendRequests, useSentFriendRequests } from "@/hooks/friends/use-friend-requests"
+import { FriendsListTab } from "./friends-list-tab"
+import { ReceivedRequestsTab } from "./received-requests-tab"
+import { SentRequestsTab } from "./sent-requests-tab"
+
+type ActiveTab = "friends" | "received" | "sent"
+
+export function FriendsContainer() {
+  const [activeTab, setActiveTab] = React.useState<ActiveTab>("friends")
+
+  const { total: receivedCount } = useReceivedFriendRequests({ limit: 1 })
+  const { total: sentCount } = useSentFriendRequests({ limit: 1 })
+
+  const tabs = [
+    {
+      id: "friends" as const,
+      label: "All Friends",
+      icon: Users,
+    },
+    {
+      id: "received" as const,
+      label: "Friend Requests",
+      icon: UserCheck,
+      badge: receivedCount,
+    },
+    {
+      id: "sent" as const,
+      label: "Sent Requests",
+      icon: Send,
+      badge: sentCount,
+    },
+  ]
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Tabs navigation */}
+      <div
+        role="tablist"
+        aria-label="Friends Navigation Tabs"
+        className="flex items-center gap-2 border-b border-border pb-2 overflow-x-auto no-scrollbar"
+      >
+        {tabs.map((tab) => {
+          const Icon = tab.icon
+          const isActive = activeTab === tab.id
+
+          return (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`tabpanel-${tab.id}`}
+              id={`tab-${tab.id}`}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-10 cursor-pointer",
+                isActive
+                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Icon className="size-4" aria-hidden="true" />
+              <span>{tab.label}</span>
+              {typeof tab.badge === "number" && tab.badge > 0 && (
+                <span
+                  className={cn(
+                    "ml-1 px-1.5 py-0.2 rounded-full text-xs font-bold",
+                    isActive
+                      ? "bg-primary-foreground text-primary"
+                      : "bg-primary/10 text-primary"
+                  )}
+                >
+                  {tab.badge}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Tab Panels */}
+      <div
+        role="tabpanel"
+        id={`tabpanel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+      >
+        {activeTab === "friends" && <FriendsListTab />}
+        {activeTab === "received" && <ReceivedRequestsTab />}
+        {activeTab === "sent" && <SentRequestsTab />}
+      </div>
+    </div>
+  )
+}

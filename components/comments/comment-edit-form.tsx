@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { IComment } from "@/lib/types"
-import { useUpdateComment } from "@/hooks/use-update-comment"
+import { useUpdateComment } from "@/hooks/comments/use-update-comment"
 import { resolveMediaUrl } from "@/lib/utils/media"
 
 interface CommentEditFormProps {
