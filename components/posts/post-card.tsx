@@ -15,6 +15,7 @@ import {
   MapPin,
   Tag,
   Check,
+  Pencil,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -45,6 +46,7 @@ import { useDeletePost } from "@/hooks/use-delete-post"
 import { REACTION_CONFIG, ReactionPicker } from "./reaction-picker"
 import { PostAttachments } from "./post-attachments"
 import { SharePostDialog } from "./share-post-dialog"
+import { PostEditDialog } from "./post-edit-dialog"
 import { cn } from "@/lib/utils"
 
 interface PostCardProps {
@@ -82,11 +84,21 @@ export function PostCard({ post, onCommentClick }: PostCardProps) {
 
   const [pickerOpen, setPickerOpen] = React.useState(false)
   const [shareOpen, setShareOpen] = React.useState(false)
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [isExpanded, setIsExpanded] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
 
-  const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const openTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+
+  // Clean up timers on unmount
+  React.useEffect(() => {
+    return () => {
+      if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    }
+  }, [])
 
   // Identify current user's reaction
   const currentUserId = user?._id
@@ -103,20 +115,31 @@ export function PostCard({ post, onCommentClick }: PostCardProps) {
   const [localReaction, setLocalReaction] = React.useState<ReactionTypeEnum | null | undefined>(undefined)
   const activeReaction = localReaction !== undefined ? localReaction : (myReactionEntry?.reactionType ?? null)
 
-  // Reaction hover dock management
+  // Reaction hover dock management with auto-close when cursor leaves
   const handleMouseEnterLike = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
+    openTimeoutRef.current = setTimeout(() => {
       setPickerOpen(true)
-    }, 400)
+    }, 300)
   }
 
   const handleMouseLeaveLike = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current)
+    if (openTimeoutRef.current) {
+      clearTimeout(openTimeoutRef.current)
+      openTimeoutRef.current = null
     }
+    closeTimeoutRef.current = setTimeout(() => {
+      setPickerOpen(false)
+    }, 250)
   }
 
   const handleSelectReaction = (reaction: ReactionTypeEnum) => {
+    if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current)
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+
     const prevReaction = activeReaction
     const isToggleOff = prevReaction === reaction
     setLocalReaction(isToggleOff ? null : reaction)
@@ -278,6 +301,13 @@ export function PostCard({ post, onCommentClick }: PostCardProps) {
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
+                      onClick={() => setEditDialogOpen(true)}
+                      className="cursor-pointer"
+                    >
+                      <Pencil className="size-4 mr-2" />
+                      <span>Edit post</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                       onClick={() => setDeleteDialogOpen(true)}
                       className="cursor-pointer text-destructive focus:text-destructive"
                     >
@@ -437,24 +467,26 @@ export function PostCard({ post, onCommentClick }: PostCardProps) {
           )}
 
           {/* Interactive Action Bar */}
-          <div className="relative flex items-center justify-between pt-1">
-            {/* Reaction Picker Floating Dock */}
-            {pickerOpen && (
-              <div className="absolute -top-12 left-0 z-50">
-                <ReactionPicker
-                  currentReaction={activeReaction}
-                  onSelect={handleSelectReaction}
-                  onClose={() => setPickerOpen(false)}
-                />
-              </div>
-            )}
-
-            {/* Like Button */}
+          <div className="flex items-center justify-between pt-1">
+            {/* Like Button & Reaction Picker Shared Hover Container */}
             <div
-              className="flex-1"
+              className="relative flex-1"
               onMouseEnter={handleMouseEnterLike}
               onMouseLeave={handleMouseLeaveLike}
             >
+              {/* Reaction Picker Floating Dock */}
+              {pickerOpen && (
+                <div
+                  className="absolute -top-11 left-0 z-50 pb-2 pointer-events-auto"
+                >
+                  <ReactionPicker
+                    currentReaction={activeReaction}
+                    onSelect={handleSelectReaction}
+                    onClose={() => setPickerOpen(false)}
+                  />
+                </div>
+              )}
+
               <Button
                 type="button"
                 variant="ghost"
@@ -517,6 +549,15 @@ export function PostCard({ post, onCommentClick }: PostCardProps) {
         open={shareOpen}
         onOpenChange={setShareOpen}
       />
+
+      {/* Edit Dialog */}
+      {isAuthor && (
+        <PostEditDialog
+          post={post}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+        />
+      )}
 
       {/* Delete Confirmation Alert Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

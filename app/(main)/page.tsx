@@ -5,15 +5,12 @@ import {
   Sparkles,
   User,
   Settings,
-  Image as ImageIcon,
-  Smile,
   ShieldCheck,
 } from "lucide-react"
 
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { usePosts } from "@/hooks/use-posts"
-import { UserAvatar } from "@/components/shared/user-avatar"
-import { PostFeed } from "@/components/posts"
+import { PostComposerTrigger, PostFeed } from "@/components/posts"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -42,47 +39,8 @@ export default function HomePage() {
 
   return (
     <div className="max-w-2xl mx-auto py-2 space-y-5">
-      {/* Post Composer Quick Trigger (Phase 5/6 Foundation) */}
-      <Card className="border-border shadow-xs">
-        <CardContent className="p-4 space-y-3">
-          <div className="flex items-center gap-3">
-            <UserAvatar user={user} size="md" />
-            <div className="flex-1">
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2.5 rounded-full bg-muted/60 hover:bg-muted text-sm text-muted-foreground transition-colors cursor-pointer min-h-11 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-                onClick={() => {
-                  // Phase 6 will open the composer dialog
-                }}
-                aria-label={`What's on your mind, ${firstName}?`}
-              >
-                What&apos;s on your mind, {firstName}?
-              </button>
-            </div>
-          </div>
-
-          <div className="h-px bg-border/60" />
-
-          <div className="flex items-center justify-around text-xs font-semibold text-muted-foreground pt-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex-1 text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10 min-h-11 cursor-pointer"
-            >
-              <ImageIcon className="size-4 mr-2 text-emerald-500" aria-hidden="true" />
-              Photo / Video
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex-1 text-muted-foreground hover:text-amber-500 hover:bg-amber-500/10 min-h-11 cursor-pointer"
-            >
-              <Smile className="size-4 mr-2 text-amber-500" aria-hidden="true" />
-              Feeling / Activity
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Post Composer Quick Trigger */}
+      <PostComposerTrigger />
 
       {/* Welcome & Quick Navigation Card */}
       <Card className="border-border shadow-xs overflow-hidden">

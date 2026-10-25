@@ -46,6 +46,10 @@ export const postService = {
       formData.append("tags", JSON.stringify(payload.tags))
     }
 
+    if (payload.location) {
+      formData.append("location", JSON.stringify(payload.location))
+    }
+
     if (payload.files && payload.files.length > 0) {
       payload.files.forEach((file) => {
         formData.append("attachments", file)
@@ -65,6 +69,10 @@ export const postService = {
 
     if (payload.tags !== undefined) {
       formData.append("tags", JSON.stringify(payload.tags))
+    }
+
+    if (payload.location !== undefined) {
+      formData.append("location", JSON.stringify(payload.location))
     }
 
     if (payload.removeAttachments && payload.removeAttachments.length > 0) {

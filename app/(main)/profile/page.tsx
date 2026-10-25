@@ -5,7 +5,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { useUserPosts } from "@/hooks/use-user-posts"
 import { ProfileHeader } from "./_components/profile-header"
 import { ProfileInfoCard } from "./_components/profile-info-card"
-import { PostFeed } from "@/components/posts"
+import { PostComposerTrigger, PostFeed } from "@/components/posts"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ErrorComponent } from "@/components/shared/error-component"
 
@@ -59,7 +59,9 @@ export default function ProfilePage() {
 
       {/* User's Posts Timeline */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <PostComposerTrigger />
+
+        <div className="flex items-center justify-between pt-1">
           <h2 className="text-lg font-bold font-heading text-foreground">
             My Posts
           </h2>
